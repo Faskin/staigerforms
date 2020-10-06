@@ -113,7 +113,15 @@ namespace staigerforms
                 txt_box.Width = 200;
                 txt_box.Height = 200;
                 this.Controls.Add(txt_box);
-                StreamWriter from_file = new StreamWriter("txtbox.txt");
+                string text;
+                try
+                {
+                    text = File.ReadAllText(path: "text.txt");
+                }
+                catch
+                {
+                    FileNotFoundException
+                }
             }
 
 
