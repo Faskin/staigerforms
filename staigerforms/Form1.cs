@@ -106,22 +106,23 @@ namespace staigerforms
             
             else if (e.Node.Text == "Tekstkast-Textbox")
             {
-                txt_box = new TextBox();
-                txt_box.Multiline = true;
-                txt_box.Text = "";
-                txt_box.Location = new Point(300, 300);
-                txt_box.Width = 200;
-                txt_box.Height = 200;
-                this.Controls.Add(txt_box);
                 string text;
                 try
                 {
                     text = File.ReadAllText(path: "text.txt");
                 }
-                catch
+                catch (FileNotFoundException exception)
                 {
-                    FileNotFoundException
+                    text = "text puudub";
                 }
+                txt_box = new TextBox();
+                txt_box.Multiline = true;
+                txt_box.Text = text;
+                txt_box.Location = new Point(300, 300);
+                txt_box.Width = 200;
+                txt_box.Height = 200;
+                this.Controls.Add(txt_box);
+               
             }
 
 
