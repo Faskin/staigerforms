@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,6 +20,10 @@ namespace staigerforms
         CheckBox box_lbl, box_btn;
         RadioButton r1, r2;
         TextBox txt_box;
+        PictureBox picture;
+        TabControl tabControl;
+        TabPage page1, page2, page3;
+        
         public Form1()
         {
             this.Height = 500;
@@ -47,6 +52,9 @@ namespace staigerforms
             tn.Nodes.Add(new TreeNode("Märkeruut-Checkbox"));
             tn.Nodes.Add(new TreeNode("Radionupp-Radiobutton"));
             tn.Nodes.Add(new TreeNode("Tekstkast-Textbox"));
+            tn.Nodes.Add(new TreeNode("PictureBox"));
+            tn.Nodes.Add(new TreeNode("Kaart--TabControl"));
+            tn.Nodes.Add(new TreeNode("MessageBox"));
 
             tree.Nodes.Add(tn);
             
@@ -60,9 +68,9 @@ namespace staigerforms
         {
             if (e.Node.Text == "Nupp-Button")
             {
-                
+
                 this.Controls.Add(btn);
-                
+
             }
             else if (e.Node.Text == "Silt-Label")
             {
@@ -70,7 +78,7 @@ namespace staigerforms
                 lbl.Text = "Tarkvara arendajad";
                 lbl.Size = new Size(150, 30);
                 lbl.Location = new Point(150, 200);
-                
+
                 this.Controls.Add(lbl);
             }
 
@@ -103,7 +111,7 @@ namespace staigerforms
                 r2.CheckedChanged += new EventHandler(RadioButtons_Changed);
 
             }
-            
+
             else if (e.Node.Text == "Tekstkast-Textbox")
             {
                 string text;
@@ -111,7 +119,7 @@ namespace staigerforms
                 {
                     text = File.ReadAllText(path: "text.txt");
                 }
-                catch (FileNotFoundException exception)
+                catch (FileNotFoundException)
                 {
                     text = "text puudub";
                 }
@@ -119,11 +127,87 @@ namespace staigerforms
                 txt_box.Multiline = true;
                 txt_box.Text = text;
                 txt_box.Location = new Point(300, 300);
-                txt_box.Width = 200;
-                txt_box.Height = 200;
+                txt_box.Width = 100;
+                txt_box.Height = 100;
                 this.Controls.Add(txt_box);
-               
+
             }
+            else if (e.Node.Text == "PictureBox")
+            {
+                picture = new PictureBox();
+                picture.Image = new Bitmap("pic.png");
+                picture.Location = new Point(400, 200);
+                picture.Size = new Size(100, 100);
+                picture.SizeMode = PictureBoxSizeMode.Zoom;
+                picture.BorderStyle = BorderStyle.Fixed3D;
+                this.Controls.Add(picture);
+            }
+            else if (e.Node.Text == "Kaart--TabControl")
+            {
+
+                tabControl = new TabControl();
+                tabControl.Location = new Point(300, 300);
+                tabControl.Size = new Size(200, 100);
+                page1 = new TabPage("Esimene");
+
+                page2 = new TabPage("Teine");
+                page3 = new TabPage("Kolmas");
+                tabControl.SelectedIndex = 1;
+                tabControl.SelectedIndex = 2;
+                tabControl.SelectedIndex = 3;
+
+                this.Controls.Add(tabControl);
+
+                var answer = MessageBox.Show("Tahad InpudBoxi naha?", "aken koos nupudega", MessageBoxButtons.YesNo);
+                if (answer == DialogResult.Yes)
+                {
+
+                    string text = Interaction.InputBox("Открытие вкладки", "InputBox", "Введите номер вкладки 1,2,3");
+                    if (text == "1")
+                    {
+                        page1.BackColor = Color.Red;
+                        tabControl.Controls.Add(page1);
+                        tabControl.SelectedTab = page1;
+                    }
+                    else if (text == "2")
+                    {
+                        page2.BackColor = Color.Blue;
+                        tabControl.Controls.Add(page2);
+                        tabControl.SelectedTab = page2;
+                    }
+                        
+                    else if (text == "3")
+                    {
+                        tabControl.Controls.Add(page3);
+                        tabControl.SelectedTab = page3;
+                    }
+
+                }
+
+                
+                
+                
+            }
+
+            else if (e.Node.Text == "MessageBox")
+            {
+                MessageBox.Show("MessageBox", "Kõige listsam aken");
+               var answer = MessageBox.Show("Tahad InpudBoxi naha?", "aken koos nupudega", MessageBoxButtons.YesNo);
+                if (answer==DialogResult.Yes)
+                {
+                   string text = Interaction.InputBox("Sisesta siia mingi tekst", "InputBox", "Mingi Tekst");
+                    if (MessageBox.Show("Kas tahad tekst saada Tekstakastisse?", "Teksti salvestamine", MessageBoxButtons.OKCancel) == DialogResult.OK) 
+                    {
+                        lbl.Text = text;
+                        Controls.Add(lbl);
+
+                    }
+
+                }
+
+
+            }
+
 
 
         }
