@@ -23,11 +23,14 @@ namespace staigerforms
         PictureBox picture;
         TabControl tabControl;
         TabPage page1, page2, page3;
-        
+        ListBox lbox;
+        DataSet dataSet;
+        Color[] Colors_list;
+
         public Form1()
         {
             this.Height = 500;
-            this.Width = 600;
+            this.Width = 800;
             this.Text = "Vorm elementidega";
             tree = new TreeView();
             tree.Dock = DockStyle.Left;
@@ -55,13 +58,16 @@ namespace staigerforms
             tn.Nodes.Add(new TreeNode("PictureBox"));
             tn.Nodes.Add(new TreeNode("Kaart--TabControl"));
             tn.Nodes.Add(new TreeNode("MessageBox"));
+            tn.Nodes.Add(new TreeNode("ListBox"));
+            tn.Nodes.Add(new TreeNode("DataGridView"));
+            tn.Nodes.Add(new TreeNode("Menu"));
 
             tree.Nodes.Add(tn);
-            
+
             this.Controls.Add(tree);
 
         }
-       
+
 
 
         private void Tree_AfterSelect(object sender, TreeViewEventArgs e)
@@ -136,7 +142,7 @@ namespace staigerforms
             {
                 picture = new PictureBox();
                 picture.Image = new Bitmap("pic.png");
-                picture.Location = new Point(400, 200);
+                picture.Location = new Point(350, 200);
                 picture.Size = new Size(100, 100);
                 picture.SizeMode = PictureBoxSizeMode.Zoom;
                 picture.BorderStyle = BorderStyle.Fixed3D;
@@ -175,7 +181,7 @@ namespace staigerforms
                         tabControl.Controls.Add(page2);
                         tabControl.SelectedTab = page2;
                     }
-                        
+
                     else if (text == "3")
                     {
                         tabControl.Controls.Add(page3);
@@ -184,19 +190,19 @@ namespace staigerforms
 
                 }
 
-                
-                
-                
+
+
+
             }
 
             else if (e.Node.Text == "MessageBox")
             {
                 MessageBox.Show("MessageBox", "Kõige listsam aken");
-               var answer = MessageBox.Show("Tahad InpudBoxi naha?", "aken koos nupudega", MessageBoxButtons.YesNo);
-                if (answer==DialogResult.Yes)
+                var answer = MessageBox.Show("Tahad InpudBoxi naha?", "aken koos nupudega", MessageBoxButtons.YesNo);
+                if (answer == DialogResult.Yes)
                 {
-                   string text = Interaction.InputBox("Sisesta siia mingi tekst", "InputBox", "Mingi Tekst");
-                    if (MessageBox.Show("Kas tahad tekst saada Tekstakastisse?", "Teksti salvestamine", MessageBoxButtons.OKCancel) == DialogResult.OK) 
+                    string text = Interaction.InputBox("Sisesta siia mingi tekst", "InputBox", "Mingi Tekst");
+                    if (MessageBox.Show("Kas tahad tekst saada Tekstakastisse?", "Teksti salvestamine", MessageBoxButtons.OKCancel) == DialogResult.OK)
                     {
                         lbl.Text = text;
                         Controls.Add(lbl);
@@ -209,7 +215,94 @@ namespace staigerforms
             }
 
 
+            else if (e.Node.Text == "ListBox")
+            {
+                string[] Colors_nimetused = new string[] { "Kollane", "Punane", "Roheline", "Sinine" };
+                Colors_list = new Color[] { Color.Yellow, Color.Red, Color.Green, Color.Blue };
 
+
+
+                lbox = new ListBox();
+
+                foreach (var item in Colors_nimetused)
+                {
+                    lbox.Items.Add(item);
+                }
+
+
+
+
+                lbox.Location = new Point(550, 350);
+                lbox.Width = Colors_nimetused.OrderByDescending(n => n.Length).First().Length * 15;
+                lbox.Height = Colors_nimetused.Length * 15;
+                lbox.SelectedIndexChanged += Lbox_SelectedIndexChanged;
+                Controls.Add(lbox);
+
+
+
+
+
+
+
+            }
+            else if (e.Node.Text == "DataGridView")
+            {
+                DataSet dataset = new DataSet("Näide");
+                dataset.ReadXml("..//..//Files//excample.xml");
+                DataGridView dgv = new DataGridView();
+                dgv.Location = new Point(480, 50);
+                dgv.Height = 250;
+                dgv.Width = 250;
+                dgv.AutoGenerateColumns = true;
+                dgv.DataMember = "Food";
+                dgv.DataSource = dataSet;
+                Controls.Add(dgv);
+            }
+            else if (e.Node.Text == "Menu")
+            {
+                MainMenu menu = new MainMenu();
+                MenuItem menuItem1 = new MenuItem("File");
+                menuItem1.MenuItems.Add("Exit", new EventHandler(menuItem1_Exit));
+                menu.MenuItems.Add(menuItem1);
+
+                MenuItem menuItem2 = new MenuItem("Settings");
+                menuItem2.MenuItems.Add("Random Color", new EventHandler(menuItem2_Color));
+                menuItem2.MenuItems.Add("Reset", new EventHandler(menuItem3_Reset));
+                menu.MenuItems.Add(menuItem2);
+                this.Menu = menu;
+
+            }
+        }
+
+        private void menuItem3_Reset(object sender, EventArgs e)
+        {
+            Controls.Clear();
+            Controls.Add(tree);
+            BackColor = DefaultBackColor;
+        }
+
+        private Random rnd = new Random();
+
+        private void menuItem2_Color(object sender, EventArgs e)
+        {
+            Color randomColor = Color.FromArgb(rnd.Next(256), rnd.Next(256), rnd.Next(256));
+
+            BackColor = randomColor;
+
+        }
+
+        private void menuItem1_Exit(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Kas oled kindel?", "Küsimus", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Dispose(); //Завершение работы приложения
+            }
+        }
+
+        private void Lbox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ListBox lb = sender as ListBox;
+            lb.BackColor = Colors_list[lbox.SelectedIndex];
         }
 
         private void RadioButtons_Changed(object sender, EventArgs e)
